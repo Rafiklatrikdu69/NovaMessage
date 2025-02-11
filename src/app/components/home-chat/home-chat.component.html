@@ -1,0 +1,84 @@
+@defer {
+  <div class="p-5 flex w-full h-full justify-between items-center space-x-6">
+    <div class="w-1/3 p-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+      <p-autoComplete
+        (onSelect)="onSelect($event)"
+        [(ngModel)]="selectedUser"
+        [dropdown]="true"
+        [suggestions]="filteredUsers"
+        (completeMethod)="search($event)"
+        field="displayName"
+        class="w-full"
+      />
+      @for (user of users(); track user.uid) {
+        <div class="flex items-center space-x-2 mt-4">
+          <img [src]="user.photoURL" alt="user.displayName" class="w-10 h-10 rounded-full" />
+          <div>
+            <p class="text-gray-700 dark:text-gray-200">{{ user.displayName }}</p>
+            <p class="text-gray-500 dark:text-gray-300">{{ user.status }}</p>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Partie droite -->
+    @defer {
+      <div class="w-2/3 p-4 bg-white dark:bg-gray-900 shadow-lg rounded-lg">
+        @for (message of messages; track message.uid) {
+          <div class="flex items-center space-x-2 mt-4">
+            <div>
+              <!-- Affichage de la date et de l'heure du message -->
+              <p class="text-gray-700 dark:text-gray-200">{{ message.timestamp}}</p>
+
+              <!-- Vérification du type de contenu -->
+              @if (message.content.type === 'text') {
+                <p class="text-gray-500 dark:text-gray-300">{{ message.content.text }}</p>
+              }
+              @else if (message.content.type === 'image') {
+                <div class="mt-2">
+                  <p class="text-gray-700 dark:text-gray-200">Image :</p>
+                  <img [src]="message.content.fileUrl" alt="Image" class="w-full rounded-md shadow-md" />
+                  <p class="text-gray-500 dark:text-gray-300">{{ message.content.fileName }}</p>
+                </div>
+              }
+              @else if (message.content.type === 'audio') {
+                <div class="mt-2">
+                  <p class="text-gray-700 dark:text-gray-200">Fichier audio:</p>
+                  <audio controls class="w-full">
+                    <source [src]="message.content.fileUrl" [type]="message.content.mimeType">
+                    Votre navigateur ne supporte pas la lecture audio.
+                  </audio>
+                  <p class="text-gray-500 dark:text-gray-300">{{ message.content.fileName }} ({{ message.content.fileSize }} bytes)</p>
+                </div>
+              }
+              @else if (message.content.type === 'file') {
+                <div class="mt-2">
+                  <p class="text-gray-700 dark:text-gray-200">Fichier :</p>
+                  <a [href]="message.content.fileUrl" download class="text-blue-600 dark:text-blue-400">
+                    Télécharger le fichier
+                  </a>
+                  <p class="text-gray-500 dark:text-gray-300">{{ message.content.fileName }} ({{ message.content.fileSize }} bytes)</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @placeholder (minimum 1s) {
+      <p-skeleton class="block w-2/3 h-8 rounded-md bg-gray-200 dark:bg-gray-700" />
+    }
+  </div>
+}
+
+@placeholder(minimum 1s) {
+  <p-skeleton class="block w-1/3 h-8 rounded-md bg-gray-200 dark:bg-gray-700" />
+}
+
+@loading {
+  <div class="text-center text-gray-500 dark:text-gray-300">Loading...</div>
+}
+
+@error {
+  <div class="text-center text-red-500 dark:text-red-400">Erreur de chargement</div>
+}
