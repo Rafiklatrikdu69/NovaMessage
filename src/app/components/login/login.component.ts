@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import {Auth, GoogleAuthProvider, signInWithPopup, getAuth, signInWithEmailAndPassword} from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Firestore, doc, setDoc, getFirestore } from '@angular/fire/firestore';
-
 @Component({
   selector: 'app-login',
   standalone: true,
