@@ -1,0 +1,46 @@
+<div class="container mx-auto p-4">
+  <div class="space-y-4">
+    <h2 class="text-2xl font-bold mb-6">Conversations</h2>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="text-center py-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
+    </div>
+
+    <!-- Conversations list -->
+    <div *ngIf="conversations$ | async as conversations" class="space-y-2">
+      <div *ngFor="let conv of conversations"
+           [routerLink]="['/chat', conv.id]"
+           class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer">
+        <!-- Group conversation -->
+        <div  class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0">
+            @if(conv.groupPhoto){
+              <img [src]="conv.groupPhoto"
+                   class="w-full h-full rounded-full object-cover"
+                   alt="Group photo">
+            }
+
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold">{{ conv.groupName }}</h3>
+            <p class="text-sm text-gray-500">
+              {{ conv.lastMessage?.text || 'No messages yet' }}
+            </p>
+          </div>
+          <div class="text-xs text-gray-400">
+            {{ conv.lastMessage?.timestamp | date:'short' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    @if ((conversations$ | async)?.length === 0) {
+      <div
+        class="text-center py-8 text-gray-500">
+        No conversations yet
+      </div>
+    }
+  </div>
+</div>
