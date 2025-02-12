@@ -11,7 +11,6 @@ import {
   where
 } from '@angular/fire/firestore';
 import {User} from '../../models/user.model';
-import {generateMockUsers} from '../utils/init';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -24,17 +23,7 @@ export class UserService {
     this.getAllUsers();
   }
   private firestore=  inject(Firestore)
-  async addMockUsers() {
-    try {
-      const mockUsers = generateMockUsers(10);
-      for (const user of mockUsers) {
-        const docRef = await addDoc(collection(this.firestore, 'users'), user);
-        console.log(`Utilisateur ${user.displayName} ajouté avec ID: ${docRef.id}`);
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'ajout des utilisateurs: ", error);
-    }
-  }
+
   getAllUsers(): void {
     const usersCollection = collection(this.firestore, 'users');
     collectionData(usersCollection, { idField: 'uid' }).subscribe((users) => {

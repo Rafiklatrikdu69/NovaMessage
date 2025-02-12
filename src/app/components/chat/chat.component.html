@@ -1,0 +1,73 @@
+<div class="flex flex-col h-[calc(100vh-4rem)] bg-gray-50">
+  <i (click)="scrollToBottom()" class="pi pi-arrow-down scroll-arrow p-3 w-2" style="cursor: pointer;"></i>
+
+  <div class="flex-1 overflow-y-auto p-4 space-y-4" #scrollableDiv>
+
+    @if (messages$ | async; as messages) {
+      @for (message of messages; track message.id) {
+        <div
+          class="flex gap-2"
+          [class.justify-end]="message.senderId === currentUserId"
+        >
+          <div
+            class="max-w-xs p-3 rounded-lg shadow"
+            [class.bg-blue-500]="message.senderId === currentUserId"
+            [class.text-white]="message.senderId === currentUserId"
+            [class.bg-gray-200]="message.senderId !== currentUserId"
+            [class.text-black]="message.senderId !== currentUserId"
+          >
+            <div class="flex items-baseline gap-2">
+              <span class="font-medium text-sm">{{ message.writeBy }}</span>
+              <span class="text-xs opacity-70">{{ convertDate(message.timestamp) }}</span>
+            </div>
+
+            @if (message.content.type === 'text') {
+              <p class="mt-1">{{ message.content.text }}</p>
+            } @else if (message.content.type === 'audio') {
+              <audio controls class="mt-2">
+                <source [src]="message.content.fileUrl" [type]="message.content.mimeType" />
+                Votre navigateur ne supporte pas la lecture audio.
+              </audio>
+              <p class="mt-1">{{ message.content.fileName }} ({{ message.content.fileSize }} bytes)</p>
+            } @else if (message.content.type === 'image') {
+              <img [src]="message.content.fileUrl" alt="Image" class="mt-2 w-full rounded-md shadow-md" />
+              <p class="mt-1">{{ message.content.fileName }}</p>
+            } @else if (message.content.type === 'file') {
+              <a [href]="message.content.fileUrl" download class="text-blue-600 dark:text-blue-400">
+                Télécharger le fichier
+              </a>
+              <p class="mt-1">{{ message.content.fileName }} ({{ message.content.fileSize }} bytes)</p>
+            }
+          </div>
+        </div>
+      }
+    }
+    <div #messagesContainer></div>
+  </div>
+
+  <div class="border-t bg-white p-4">
+    <form (ngSubmit)="sendMessage()" class="flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="newMessage"
+        name="newMessage"
+        class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+        placeholder="Écrire un message..."
+        required
+      />
+      <button
+        type="submit"
+        [disabled]="!newMessage"
+        class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+      >
+        Envoyer
+      </button>
+    </form>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="flex items-center justify-center h-full">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+  </div>
+</ng-template>

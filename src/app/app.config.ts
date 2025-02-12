@@ -7,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import customPreset from '../custom.preset';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import {DatePipe} from '@angular/common';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBqCzJnKg-5XEXtL47kKp0THAuw5p9vkiY",
@@ -31,6 +32,8 @@ appConfig = {
       auth.settings.appVerificationDisabledForTesting = true;
       return auth;
     }),
-    providePrimeNG({ theme: { preset: customPreset } })
+    providePrimeNG({ theme: { preset: customPreset } }),
+    DatePipe
+
   ]
 };
