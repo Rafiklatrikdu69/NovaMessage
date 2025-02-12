@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import {UserService} from './services/user.service';
 import {ConversationService} from './services/conversation.service';
 import {MessageService} from './services/message.service';
+import {NavComponent} from './components/nav/nav.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, CommonModule],
+  imports: [RouterOutlet, FormsModule, CommonModule, NavComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

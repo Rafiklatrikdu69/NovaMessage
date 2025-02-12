@@ -1,3 +1,4 @@
+/*
 import {User} from '../../models/user.model';
 import { Conversation } from '../../models/conversation.model';
 import { Message } from '../../models/message.model';
@@ -122,3 +123,4 @@ export const generateMockMessages = (count: number, conversationIds: string[], u
     };
   });
 };
+*/

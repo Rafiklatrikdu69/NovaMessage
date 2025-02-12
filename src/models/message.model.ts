@@ -1,5 +1,5 @@
 export interface Message {
-  id: string;
+  id?: string;
   uid?:string;
   conversationId: string;
   senderId: string;
@@ -12,10 +12,11 @@ export interface Message {
     mimeType?: string;
   };
   timestamp: string;
-  readBy: {
+  writeBy: string;
+  readBy?: {
     [userId: string]: Date;
   };
-  status: 'sent' | 'delivered' | 'read';
+  status?: 'sent' | 'delivered' | 'read';
   reactions?: {
     [userId: string]: string; // emoji
   };
