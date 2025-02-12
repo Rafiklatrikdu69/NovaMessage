@@ -1,5 +1,5 @@
-import {ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {AfterViewChecked, ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
 import {Firestore, collection, query, where, collectionData, orderBy, addDoc} from '@angular/fire/firestore';
 import {Observable, take} from 'rxjs';
 import {Message} from '../../../models/message.model';
@@ -7,15 +7,16 @@ import {AsyncPipe, DatePipe} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {getAuth} from '@angular/fire/auth';
+import {NavComponent} from "../nav/nav.component";
 
 @Component({
   selector: 'app-chat',
   standalone: true,
   templateUrl: './chat.component.html',
-  imports: [AsyncPipe, ReactiveFormsModule, FormsModule,DatePipe],
+    imports: [AsyncPipe, ReactiveFormsModule, FormsModule, DatePipe, NavComponent, RouterOutlet],
   styles: []
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit ,AfterViewChecked {
   datePipe = inject(DatePipe);
   newMessage!: string;
   private firestore: Firestore = inject(Firestore);
@@ -38,6 +39,11 @@ export class ChatComponent implements OnInit {
       });
     }
   }
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+
 
   convertDate(dateString: string): string | null {
     const date = new Date(dateString);
@@ -52,9 +58,7 @@ export class ChatComponent implements OnInit {
     );
 
     this.messages$ = collectionData(messagesQuery, {idField: 'id'}) as Observable<Message[]>;
-    this.messages$.subscribe(() => {
-      this.scrollToBottom();
-    });
+
   }
 
   async sendMessage() {
@@ -89,10 +93,7 @@ export class ChatComponent implements OnInit {
 
     this.newMessage = '';
     this.selectedFile = undefined;
-    setTimeout(() => {
 
-      this.scrollToBottom();
-    }, 100);
 
   }
   scrollToBottom(): void {

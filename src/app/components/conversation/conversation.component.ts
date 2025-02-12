@@ -14,12 +14,13 @@ import {Auth, getAuth} from '@angular/fire/auth';
 import {Observable, map, switchMap, of, combineLatest, take} from 'rxjs';
 import {Conversation} from '../../../models/conversation.model';
 import {User} from 'firebase/auth';
+import {NavComponent} from "../nav/nav.component";
 
 
 @Component({
   selector: 'app-conversations',
   standalone: true,
-  imports: [CommonModule, RouterModule,AsyncPipe],
+    imports: [CommonModule, RouterModule, AsyncPipe, NavComponent],
   templateUrl: './conversation.component.html',
   styles: []
 })
